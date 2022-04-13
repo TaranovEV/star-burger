@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 
 
 from .models import Product, Order, OrderQuantity
@@ -59,17 +60,27 @@ def product_list_api(request):
         'indent': 4,
     })
 
+
 @api_view(['POST'])
 def register_order(request):
+    key = 'products'
     order = request.data
-    create_order = Order.objects.create(first_name=order['firstname'],
+
+    if (order.get(key) != order.get(key) or 
+        not isinstance(order.get(key), list) or
+        not order.get(key)):
+        content = {'error': f'{key} is empty or string'}
+        return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+    else:
+        create_order = Order.objects.create(first_name=order['firstname'],
                          last_name=order['lastname'],
                          address=order['address'],
                          phonenumber=order['phonenumber'],)
-    for position_order in order['products']:
-        position = Product.objects.get(pk=position_order['product'])
-        OrderQuantity.objects.create(order=create_order,
+        for position_order in order['products']:
+            position = Product.objects.get(pk=position_order['product'])
+            OrderQuantity.objects.create(order=create_order,
                                  product=position,
                                  quantity=position_order['quantity'])
 
-    return Response(order)
+        return Response(order)
