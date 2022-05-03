@@ -1,5 +1,6 @@
 from itertools import product
 from django.http import JsonResponse
+
 from django.templatetags.static import static
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -13,13 +14,18 @@ from .models import Product, Order, OrderQuantity
 
 class ProductSerializer(ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+    quantity = serializers.IntegerField()
     class Meta:
         model = Product
-        fields = ['product', ]
+        fields = ['product', 'quantity']
+        extra_kwargs = {
+            'product': {'write_only': True},
+            'quantity': {'write_only': True}
+        }
 
 
 class OrderSerializer(ModelSerializer):
-    products = ProductSerializer(many=True, allow_empty=False)
+    products = ProductSerializer(many=True, allow_empty=False, write_only=True)
     firstname = serializers.CharField(source='first_name')
     lastname = serializers.CharField(source='last_name')
 
@@ -83,18 +89,19 @@ def product_list_api(request):
 @api_view(['POST'])
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if serializer.is_valid(raise_exception=True):
     
-    create_order = Order.objects.create(first_name=serializer.validated_data['firstname'],
-                         last_name=serializer.validated_data['lastname'],
+        create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
+                         last_name=serializer.validated_data['last_name'],
                          address=serializer.validated_data['address'],
                          phonenumber=serializer.validated_data['phonenumber'],)
-    for position_order in serializer.validated_data['products']:
-        pk = position_order['product']
-        position = Product.objects.get(pk=pk)
-        if position is not None:
-            OrderQuantity.objects.create(order=create_order,
+        for position_order in serializer.validated_data['products']:
+            position = Product.objects.get(name=position_order['product'])
+            if position is not None:
+                OrderQuantity.objects.create(order=create_order,
                                      product=position,
                                      quantity=position_order['quantity'])
-                                         
+        order = serializer.data
+        order['id'] = create_order.id
+        return Response(order)                             
     return Response(serializer.validated_data)
