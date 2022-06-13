@@ -10,6 +10,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 
 from .models import Product, Order, OrderQuantity
+from django.db import transaction
 
 
 class ProductSerializer(ModelSerializer):
@@ -85,7 +86,7 @@ def product_list_api(request):
         'indent': 4,
     })
 
-
+@transaction.atomic
 @api_view(['POST'])
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
@@ -103,6 +104,7 @@ def register_order(request):
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],
                                             cost=sum_cost_order)
+
         for position_order in serializer.validated_data['products']:
             position = Product.objects.get(name=position_order['product'])
             if position is not None:
