@@ -118,6 +118,7 @@ class OrderAdmin(admin.ModelAdmin):
         'last_name',
         'address',
         'phonenumber',
+        'cost'
     ]
 
     inlines = [

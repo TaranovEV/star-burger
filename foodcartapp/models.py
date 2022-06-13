@@ -5,8 +5,7 @@ from django.db.models import Sum, F
 
 
 
-class OrderQuantityQuerySet(models.QuerySet):
-
+class OrderQuantityQuerySet(models.QuerySet):  
     def cost_order(self):
         all_fields = self.select_related('order', 'product')
         all_fields = (
@@ -172,7 +171,10 @@ class Order(models.Model):
                                    blank=False,
                                    region="RU"
     )
-
+    cost = models.DecimalField('стоимость заказа', null=True, blank=True,
+                                max_digits=8,
+                                decimal_places=2,
+                                validators=[MinValueValidator(0)])
     class Meta:
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
@@ -191,9 +193,10 @@ class OrderQuantity(models.Model):
                                                 blank=True,
                                                 null=True)
     objects = OrderQuantityQuerySet.as_manager()
+
     class Meta:
         verbose_name = 'Элемент заказа'
         verbose_name_plural = 'Элементы заказа'
-        
+
     def __str__(self):
         return '{}_{}'.format(self.product.__str__(), self.order.__str__())

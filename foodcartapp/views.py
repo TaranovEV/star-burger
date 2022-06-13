@@ -89,18 +89,26 @@ def product_list_api(request):
 @api_view(['POST'])
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
+
     if serializer.is_valid(raise_exception=True):
-    
+        sum_cost_order = 0
+        for_calculate_cost = serializer.validated_data['products']
+        for position_order in for_calculate_cost:
+            position_order['cost'] = (
+                Product.objects.get(name=position_order['product']).price * position_order['quantity'])
+            sum_cost_order += position_order['cost']
+
         create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
-                         last_name=serializer.validated_data['last_name'],
-                         address=serializer.validated_data['address'],
-                         phonenumber=serializer.validated_data['phonenumber'],)
+                                            last_name=serializer.validated_data['last_name'],
+                                            address=serializer.validated_data['address'],
+                                            phonenumber=serializer.validated_data['phonenumber'],
+                                            cost=sum_cost_order)
         for position_order in serializer.validated_data['products']:
             position = Product.objects.get(name=position_order['product'])
             if position is not None:
                 OrderQuantity.objects.create(order=create_order,
-                                     product=position,
-                                     quantity=position_order['quantity'])
+                                             product=position,
+                                             quantity=position_order['quantity'])
         order = serializer.data
         order['id'] = create_order.id
         return Response(order)                             
