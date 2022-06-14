@@ -117,6 +117,7 @@ class ProductInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    readonly_fields = ('registered_at',)
     list_display = [
         'first_name',
         'last_name',

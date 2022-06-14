@@ -187,6 +187,9 @@ class Order(models.Model):
                                 max_digits=8,
                                 decimal_places=2,
                                 validators=[MinValueValidator(0)])
+    registered_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    called_at = models.DateTimeField(blank=True, null=True)
+    delivered_at = models.DateTimeField(blank=True, null=True)
     class Meta:
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
