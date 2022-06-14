@@ -145,6 +145,13 @@ class RestaurantMenuItem(models.Model):
 
 
 class Order(models.Model):
+    STATUSES = (
+        ('N', 'Необработанный'),
+        ('Y', 'Обработан'),
+    )
+    status_order = models.CharField(max_length=2,
+                                    choices=STATUSES,
+                                    default='N')
     products = models.ManyToManyField(
         Product,
         through='OrderQuantity',
