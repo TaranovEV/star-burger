@@ -149,10 +149,18 @@ class Order(models.Model):
         ('N', 'Необработанный'),
         ('Y', 'Обработан'),
     )
+    PAYMENT_METHODS = (
+        ('C', 'Наличными'),
+        ('E', 'Электронно'),
+    )
     status_order = models.CharField(verbose_name='статус',
                                     max_length=2,
                                     choices=STATUSES,
                                     default='N')
+    payment_method = models.CharField(verbose_name='способ оплаты',
+                                      max_length=2,
+                                      choices=PAYMENT_METHODS,
+                                      default='C')
     comment = models.CharField(verbose_name='Комментарий',
                                max_length=200,
                                default='',
