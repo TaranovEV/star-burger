@@ -149,9 +149,14 @@ class Order(models.Model):
         ('N', 'Необработанный'),
         ('Y', 'Обработан'),
     )
-    status_order = models.CharField(max_length=2,
+    status_order = models.CharField(verbose_name='статус',
+                                    max_length=2,
                                     choices=STATUSES,
                                     default='N')
+    comment = models.CharField(verbose_name='Комментарий',
+                               max_length=200,
+                               default='',
+                               blank=True)
     products = models.ManyToManyField(
         Product,
         through='OrderQuantity',
