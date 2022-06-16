@@ -8,7 +8,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 
-from foodcartapp.models import Product, Restaurant, OrderQuantity, Order, RestaurantMenuItem
+from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem, CoordinateAddress
+from geopy import distance
+from geopy.geocoders import *
 
 
 class Login(forms.Form):
@@ -98,12 +100,27 @@ def view_restaurants(request):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
     orders = Order.objects.filter(status_order='N')
+    geolocator = ArcGIS()
     for order in orders:
+        try:
+            obj = CoordinateAddress.objects.get(address=order.address,)
+        except CoordinateAddress.DoesNotExist:
+            coords_order = geolocator.geocode(order.address)
+            obj = CoordinateAddress(address=order.address,
+                                        latitude=coords_order.latitude,
+                                        longitude=coords_order.longitude)
+            obj.save()
         pos = order.products.all().values_list('id')
         pos_in_restaurant = (
-            RestaurantMenuItem.objects.filter(product__in=pos)
+            list(RestaurantMenuItem.objects.filter(product__in=pos)
                                       .filter(availability=True)
+                                      .values('restaurant__address','product__name'))
         )
+        for restaurans in pos_in_restaurant:
+            coords_rest = geolocator.geocode(restaurans['restaurant__address'])
+            restaurans['distance'] = distance.distance(
+                (obj.latitude, obj.longitude),
+                (coords_rest.latitude, coords_rest.longitude)).km
         order.restaurant = pos_in_restaurant
     return render(request, template_name='order_items.html', context={
         'order_items': orders

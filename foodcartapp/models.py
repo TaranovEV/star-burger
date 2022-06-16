@@ -5,11 +5,12 @@ from django.db.models import Sum, F
 
 
 
-class OrderQuantityQuerySet(models.QuerySet):  
+class OrderQuantityQuerySet(models.QuerySet):
     def cost_order(self):
         all_fields = self.select_related('order', 'product')
         all_fields = (
-            all_fields.annotate(cost_position=F('quantity') * F('product__price')).all()
+            all_fields.annotate(
+                cost_position=F('quantity') * F('product__price')).all()
         )
         return (
             all_fields.values('order').annotate(
@@ -169,33 +170,32 @@ class Order(models.Model):
         Product,
         through='OrderQuantity',
         related_name='orders',
-        verbose_name='позиции',
-    )
+        verbose_name='позиции',)
     first_name = models.CharField(verbose_name='имя',
                                   max_length=100,
                                   null=False,
-                                  blank=False,
-    )
+                                  blank=False,)
     last_name = models.CharField(verbose_name='фамилия',
                                  max_length=100,
                                  null=False,
-                                 blank=False,
-    )
+                                 blank=False,)
     address = models.CharField(verbose_name='адрес',
                                max_length=150,
                                null=False,
-                               blank=False,
-    )
+                               blank=False,)
     phonenumber = PhoneNumberField(verbose_name='телефон',
                                    null=False,
                                    blank=False,
-                                   region="RU"
-    )
-    cost = models.DecimalField('стоимость заказа', null=True, blank=True,
-                                max_digits=8,
-                                decimal_places=2,
-                                validators=[MinValueValidator(0)])
-    registered_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+                                   region="RU")
+    cost = models.DecimalField('стоимость заказа',
+                               null=True,
+                               blank=True,
+                               max_digits=8,
+                               decimal_places=2,
+                               validators=[MinValueValidator(0)])
+    registered_at = models.DateTimeField(auto_now_add=True,
+                                         blank=True,
+                                         null=True)
     called_at = models.DateTimeField(blank=True, null=True)
     delivered_at = models.DateTimeField(blank=True, null=True)
     class Meta:
@@ -215,7 +215,10 @@ class OrderQuantity(models.Model):
     quantity = models.PositiveSmallIntegerField(verbose_name='Количество',
                                                 blank=True,
                                                 null=True)
-    restaurant = models.ForeignKey(Restaurant, blank=True, null=True, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant,
+                                   blank=True,
+                                   null=True,
+                                   on_delete=models.CASCADE)
     objects = OrderQuantityQuerySet.as_manager()
 
     class Meta:
@@ -224,3 +227,18 @@ class OrderQuantity(models.Model):
 
     def __str__(self):
         return '{}_{}'.format(self.product.__str__(), self.order.__str__())
+
+
+class CoordinateAddress(models.Model):
+    address = models.CharField(verbose_name='адрес',
+                               max_length=150,
+                               null=False,
+                               blank=False,)
+    latitude = models.DecimalField('широта',
+                                   max_digits=8,
+                                   decimal_places=2,
+                                   validators=[MinValueValidator(0)])
+    longitude = models.DecimalField('долгота',
+                                    max_digits=8,
+                                    decimal_places=2,
+                                    validators=[MinValueValidator(0)])
