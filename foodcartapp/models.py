@@ -215,6 +215,7 @@ class OrderQuantity(models.Model):
     quantity = models.PositiveSmallIntegerField(verbose_name='Количество',
                                                 blank=True,
                                                 null=True)
+    restaurant = models.ForeignKey(Restaurant, blank=True, null=True, on_delete=models.CASCADE)
     objects = OrderQuantityQuerySet.as_manager()
 
     class Meta:
