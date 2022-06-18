@@ -203,10 +203,6 @@ class OrderQuantity(models.Model):
                               on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(verbose_name='количество',
                                                 validators=[MinValueValidator(0)])
-    restaurant = models.ForeignKey(Restaurant,
-                                   blank=True,
-                                   null=True,
-                                   on_delete=models.CASCADE)
     cost = models.DecimalField('стоимость',
                                max_digits=8,
                                decimal_places=2,
