@@ -161,8 +161,7 @@ class Order(models.Model):
     payment_method = models.CharField(verbose_name='способ оплаты',
                                       max_length=2,
                                       choices=PAYMENT_METHODS,)
-    comment = models.CharField(verbose_name='Комментарий',
-                               max_length=200,
+    comment = models.TextField(verbose_name='Комментарий',
                                default='',
                                blank=True)
     products = models.ManyToManyField(
@@ -178,8 +177,7 @@ class Order(models.Model):
                                  max_length=100,
                                  null=False,
                                  blank=False,)
-    address = models.CharField(verbose_name='адрес',
-                               max_length=150,
+    address = models.TextField(verbose_name='адрес',
                                null=False,
                                blank=False,)
     phonenumber = PhoneNumberField(verbose_name='телефон',
