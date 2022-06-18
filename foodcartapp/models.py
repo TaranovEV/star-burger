@@ -161,7 +161,7 @@ class Order(models.Model):
     payment_method = models.CharField(verbose_name='способ оплаты',
                                       max_length=2,
                                       choices=PAYMENT_METHODS,)
-    comment = models.TextField(verbose_name='Комментарий',
+    comment = models.TextField(verbose_name='комментарий',
                                default='',
                                blank=True)
     products = models.ManyToManyField(
