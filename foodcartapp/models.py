@@ -195,8 +195,10 @@ class Order(models.Model):
 class OrderQuantity(models.Model):
     product = models.ForeignKey(Product,
                                 verbose_name='товар',
+                                related_name='in_order_quantity',
                                 on_delete=models.CASCADE)
     order = models.ForeignKey(Order,
+                              related_name='in_order_quantity',
                               on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(verbose_name='количество',)
     restaurant = models.ForeignKey(Restaurant,
