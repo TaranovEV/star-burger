@@ -198,6 +198,7 @@ class OrderQuantity(models.Model):
                                 related_name='in_order_quantity',
                                 on_delete=models.CASCADE)
     order = models.ForeignKey(Order,
+                              verbose_name='заказы',
                               related_name='in_order_quantity',
                               on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(verbose_name='количество',
