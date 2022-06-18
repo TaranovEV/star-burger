@@ -4,7 +4,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Sum, F
 
 
-
 class OrderQuantityQuerySet(models.QuerySet):
     def cost_order(self):
         all_fields = self.select_related('order', 'product')
@@ -23,6 +22,7 @@ class OrderQuantityQuerySet(models.QuerySet):
                          'cost_order'
                     )
         )
+
 
 class Restaurant(models.Model):
     name = models.CharField(
@@ -164,11 +164,10 @@ class Order(models.Model):
     comment = models.TextField(verbose_name='комментарий',
                                default='',
                                blank=True)
-    products = models.ManyToManyField(
-        Product,
-        through='OrderQuantity',
-        related_name='orders',
-        verbose_name='позиции',)
+    products = models.ManyToManyField(Product,
+                                      through='OrderQuantity',
+                                      related_name='orders',
+                                      verbose_name='позиции',)
     first_name = models.CharField(verbose_name='имя',
                                   max_length=100,)
     last_name = models.CharField(verbose_name='фамилия',
@@ -187,6 +186,7 @@ class Order(models.Model):
                                          null=True)
     called_at = models.DateTimeField(blank=True, null=True)
     delivered_at = models.DateTimeField(blank=True, null=True)
+
     class Meta:
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
