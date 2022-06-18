@@ -170,19 +170,11 @@ class Order(models.Model):
         related_name='orders',
         verbose_name='позиции',)
     first_name = models.CharField(verbose_name='имя',
-                                  max_length=100,
-                                  null=False,
-                                  blank=False,)
+                                  max_length=100,)
     last_name = models.CharField(verbose_name='фамилия',
-                                 max_length=100,
-                                 null=False,
-                                 blank=False,)
-    address = models.TextField(verbose_name='адрес',
-                               null=False,
-                               blank=False,)
+                                 max_length=100,)
+    address = models.TextField(verbose_name='адрес',)
     phonenumber = PhoneNumberField(verbose_name='телефон',
-                                   null=False,
-                                   blank=False,
                                    region="RU")
     cost = models.DecimalField('стоимость заказа',
                                null=True,
