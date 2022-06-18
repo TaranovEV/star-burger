@@ -200,7 +200,8 @@ class OrderQuantity(models.Model):
     order = models.ForeignKey(Order,
                               related_name='in_order_quantity',
                               on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField(verbose_name='количество',)
+    quantity = models.PositiveSmallIntegerField(verbose_name='количество',
+                                                validators=[MinValueValidator(0)])
     restaurant = models.ForeignKey(Restaurant,
                                    blank=True,
                                    null=True,
