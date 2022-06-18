@@ -112,7 +112,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class ProductInline(admin.TabularInline):
     model = OrderQuantity
-    fields = ['product', 'quantity', 'restaurant']
+    fields = ['product', 'cost', 'quantity', 'restaurant']
 
 
 @admin.register(Order)
@@ -123,7 +123,6 @@ class OrderAdmin(admin.ModelAdmin):
         'last_name',
         'address',
         'phonenumber',
-        'cost'
     ]
 
     inlines = [

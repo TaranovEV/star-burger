@@ -6,10 +6,10 @@ from django.db.models import Sum, F
 
 class OrderQuantityQuerySet(models.QuerySet):
     def cost_order(self):
-        all_fields = self.select_related('order', 'product')
+        all_fields = self.prefetch_related('order', 'product')
         all_fields = (
             all_fields.annotate(
-                cost_position=F('quantity') * F('product__price')).all()
+                cost_position=F('quantity') * F('cost')).all()
         )
         return (
             all_fields.values('order').annotate(
@@ -19,7 +19,9 @@ class OrderQuantityQuerySet(models.QuerySet):
                          'order__first_name',
                          'order__last_name',
                          'order__phonenumber',
-                         'cost_order'
+                         'cost_order',
+                         'order__status_order',
+                         'order__payment_method'
                     )
         )
 
@@ -175,12 +177,7 @@ class Order(models.Model):
     address = models.TextField(verbose_name='адрес',)
     phonenumber = PhoneNumberField(verbose_name='телефон',
                                    region="RU")
-    cost = models.DecimalField('стоимость заказа',
-                               null=True,
-                               blank=True,
-                               max_digits=8,
-                               decimal_places=2,
-                               validators=[MinValueValidator(0)])
+
     registered_at = models.DateTimeField(auto_now_add=True,
                                          blank=True,
                                          null=True)
@@ -197,17 +194,23 @@ class Order(models.Model):
 
 class OrderQuantity(models.Model):
     product = models.ForeignKey(Product,
-                                verbose_name='Товар',
+                                verbose_name='товар',
                                 on_delete=models.CASCADE)
     order = models.ForeignKey(Order,
                               on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField(verbose_name='Количество',
+    quantity = models.PositiveSmallIntegerField(verbose_name='количество',
                                                 blank=True,
                                                 null=True)
     restaurant = models.ForeignKey(Restaurant,
                                    blank=True,
                                    null=True,
                                    on_delete=models.CASCADE)
+    cost = models.DecimalField('стоимость',
+                               null=True,
+                               blank=True,
+                               max_digits=8,
+                               decimal_places=2,
+                               validators=[MinValueValidator(0)])
     objects = OrderQuantityQuerySet.as_manager()
 
     class Meta:

@@ -102,8 +102,7 @@ def register_order(request):
         create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
                                             last_name=serializer.validated_data['last_name'],
                                             address=serializer.validated_data['address'],
-                                            phonenumber=serializer.validated_data['phonenumber'],
-                                            cost=sum_cost_order)
+                                            phonenumber=serializer.validated_data['phonenumber'],)
 
         for position_order in serializer.validated_data['products']:
             position = Product.objects.get(name=position_order['product'])
