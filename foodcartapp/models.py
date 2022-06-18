@@ -160,8 +160,7 @@ class Order(models.Model):
                                     default='N')
     payment_method = models.CharField(verbose_name='способ оплаты',
                                       max_length=2,
-                                      choices=PAYMENT_METHODS,
-                                      default='C')
+                                      choices=PAYMENT_METHODS,)
     comment = models.CharField(verbose_name='Комментарий',
                                max_length=200,
                                default='',
