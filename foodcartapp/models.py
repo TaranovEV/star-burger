@@ -217,9 +217,7 @@ class OrderQuantity(models.Model):
 
 class CoordinateAddress(models.Model):
     address = models.CharField(verbose_name='адрес',
-                               max_length=150,
-                               null=False,
-                               blank=False,)
+                               max_length=150,)
     latitude = models.DecimalField('широта',
                                    max_digits=8,
                                    decimal_places=2,
