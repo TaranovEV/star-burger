@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Sum, F
 
@@ -221,8 +221,14 @@ class CoordinateAddress(models.Model):
     latitude = models.DecimalField('широта',
                                    max_digits=8,
                                    decimal_places=2,
-                                   validators=[MinValueValidator(0)])
+                                   validators=[
+                                      MinValueValidator(-90),
+                                      MaxValueValidator(90)
+                                   ])
     longitude = models.DecimalField('долгота',
                                     max_digits=8,
                                     decimal_places=2,
-                                    validators=[MinValueValidator(0)])
+                                    validators=[
+                                      MinValueValidator(-180),
+                                      MaxValueValidator(180)
+                                   ])
