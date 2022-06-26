@@ -9,21 +9,9 @@ class OrderQuantityQuerySet(models.QuerySet):
         required_fields = self.prefetch_related('order', 'product')
         required_fields = (
             required_fields.annotate(
-                cost_position=F('quantity') * F('cost')).all()
+                cost_order=Sum(F('quantity') * F('cost'))).all()
         )
-        return (
-            required_fields.values('order').annotate(
-                cost_order=Sum('cost_position')
-                ).values('order',
-                         'order__address',
-                         'order__first_name',
-                         'order__last_name',
-                         'order__phonenumber',
-                         'cost_order',
-                         'order__status_order',
-                         'order__payment_method'
-                    )
-        )
+        return required_fields
 
 
 class Restaurant(models.Model):

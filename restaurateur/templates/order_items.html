@@ -28,13 +28,13 @@
     {% for item in order_items %}
       <tr>
         <td>{{ item.order }}</td>
-        <td>{{ item.order__status_order }}</td>
-        <td>{{ item.order__payment_method }}</td>
+        <td>{{ item.order.get_status_order_display }}</td>
+        <td>{{ item.order.get_payment_method_display }}</td>
         <td>{{ item.cost_order }}</td>
-        <td>{{ item.order__first_name }} {{ item.order__last_name }}</td>
-        <td>{{ item.order__phonenumber }}</td>
-        <td>{{ item.order__address }}</td>
-        <td>{{ item.order__comment }}</td>
+        <td>{{ item.order.first_name }} {{ item.order.last_name }}</td>
+        <td>{{ item.order.phonenumber }}</td>
+        <td>{{ item.order.address }}</td>
+        <td>{{ item.order.comment }}</td>
         <td> Могут приготовить<details>{{ item.restaurant }}</details></td>
        <td> <a href='{% url "admin:foodcartapp_order_change" item.order %}?next={{ request.path|urlencode }}'> редактировать </a> </td>
       </tr>
