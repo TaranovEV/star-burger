@@ -97,8 +97,8 @@ def register_order(request):
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],)
         products = []
-        for pos in serializer.validated_data['products']:
-            products.append(pos['product'])
+        for position in serializer.validated_data['products']:
+            products.append(position['product'])
         products_in_order = (
             Product.objects.filter(name__in=products)
         )

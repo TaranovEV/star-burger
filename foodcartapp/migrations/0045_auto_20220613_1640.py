@@ -5,20 +5,24 @@ from django.db import migrations
 def copy_price(apps, schema_editor):
     Product = apps.get_model('foodcartapp', 'Product')
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
-    for pos in OrderQuantity.objects.all():
-        for product in pos.order.products.all():
+    replace_objects = OrderQuantity.objects.all()
+    if replace_objects.exists():
+    for position in replace_objects.iterator():
+        for product in position.order.products.all():
             price = Product.objects.get(id=product.id).price
-            pos.price = price
-            pos.save()
+            position.price = price
+            position.save()
 
 def move_backward(apps, schema_editor):
     Product = apps.get_model('foodcartapp', 'Product')
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
-    for pos in OrderQuantity.objects.all():
-        for product in pos.order.products.all():
+    replace_objects = OrderQuantity.objects.all()
+    if replace_objects.exists():
+    for position in replace_objects.iterator():
+        for product in position.order.products.all():
             price = Product.objects.get(id=product.id).price
-            pos.price = price
-            pos.save()
+            position.price = price
+            position.save()
 
 class Migration(migrations.Migration):
 
