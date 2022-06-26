@@ -94,22 +94,24 @@ def register_order(request):
     if serializer.is_valid(raise_exception=True):
         sum_cost_order = 0
         for_calculate_cost = serializer.validated_data['products']
-        for position_order in for_calculate_cost:
-            position_order['cost'] = (
-                Product.objects.get(name=position_order['product']).price * position_order['quantity'])
-            sum_cost_order += position_order['cost']
+        for order_position in for_calculate_cost:
+            order_position['cost'] = (
+                Product.objects.get(name=order_position['product']).price
+                * order_position['quantity']
+            )
+            sum_cost_order += order_position['cost']
 
         create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
                                             last_name=serializer.validated_data['last_name'],
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],)
 
-        for position_order in serializer.validated_data['products']:
-            position = Product.objects.get(name=position_order['product'])
+        for order_position in serializer.validated_data['products']:
+            position = Product.objects.get(name=order_position['product'])
             if position is not None:
                 OrderQuantity.objects.create(order=create_order,
                                              product=position,
-                                             quantity=position_order['quantity'])
+                                             quantity=order_position['quantity'])
         order = serializer.data
         order['id'] = create_order.id
         return Response(order)                             
