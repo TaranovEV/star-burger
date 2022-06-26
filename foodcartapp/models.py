@@ -174,7 +174,8 @@ class Order(models.Model):
     last_name = models.CharField(verbose_name='фамилия',
                                  max_length=100,)
     address = models.CharField(verbose_name='адрес',
-                               max_length=200,)
+                               max_length=200,
+                               unique=True)
     phonenumber = PhoneNumberField(verbose_name='телефон',
                                    region="RU")
 
@@ -217,7 +218,8 @@ class OrderQuantity(models.Model):
 
 class CoordinateAddress(models.Model):
     address = models.CharField(verbose_name='адрес',
-                               max_length=150,)
+                               max_length=150,
+                               unique=True)
     latitude = models.DecimalField('широта',
                                    max_digits=8,
                                    decimal_places=2,
