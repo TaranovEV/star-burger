@@ -96,13 +96,20 @@ def register_order(request):
                                             last_name=serializer.validated_data['last_name'],
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],)
-
-        order_positions = Product.objects.filter(name__in=serializer.validated_data['products'])
-        if order_positions:
-            for position in order_positions:
-                OrderQuantity.objects.create(order=created_order,
-                                             product=position,
-                                             quantity=position['quantity'])
+        products = []
+        for pos in serializer.validated_data['products']:
+            products.append(pos['product'])
+        products_in_order = (
+            Product.objects.filter(name__in=products)
+        )
+        if products_in_order:
+            objects  = [
+                OrderQuantity(order=created_order,
+                              product=position['product'],
+                              quantity=position['quantity'],
+                              cost=Product.objects.get(name=position['product']).price * position['quantity'])
+                              for position in serializer.validated_data['products']]
+            OrderQuantity.objects.bulk_create(objects)
         order = serializer.data
         order['id'] = created_order.id
         return Response(order)
