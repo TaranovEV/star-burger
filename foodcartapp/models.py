@@ -164,7 +164,6 @@ class Order(models.Model):
                                       max_length=2,
                                       choices=PAYMENT_METHODS,)
     comment = models.TextField(verbose_name='комментарий',
-                               default='',
                                blank=True)
     products = models.ManyToManyField(Product,
                                       through='OrderQuantity',
