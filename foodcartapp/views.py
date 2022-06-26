@@ -92,18 +92,18 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid(raise_exception=True):
-        create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
+        created_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
                                             last_name=serializer.validated_data['last_name'],
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],)
 
         order_positions = Product.objects.filter(name__in=serializer.validated_data['products'])
         if order_positions:
-            for order_position in order_positions:
-                OrderQuantity.objects.create(order=create_order,
+            for position in order_positions:
+                OrderQuantity.objects.create(order=created_order,
                                              product=position,
-                                             quantity=order_position['quantity'])
+                                             quantity=position['quantity'])
         order = serializer.data
-        order['id'] = create_order.id
+        order['id'] = created_order.id
         return Response(order)
     return Response(serializer.validated_data)
