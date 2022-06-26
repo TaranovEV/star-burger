@@ -6,36 +6,34 @@ from django.db.models import Sum, F
 def copy_cost_orders(apps, schema_editor):
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
     Order = apps.get_model('foodcartapp', 'Order')
-    all_fields = OrderQuantity.objects.all()
-    all_fields = (
-            all_fields.annotate(cost_position=F('quantity') * F('product__price')).all()
+    required_fields = OrderQuantity.objects.all()
+    required_fields = (
+            required_fields.annotate(cost_position=F('quantity') * F('product__price')).all()
         )
-    orders_with_cost = all_fields.values('order').annotate(
+    orders_with_cost = required_fields.annotate(
                 cost_order=Sum('cost_position')
-                ).values('order',
-                         'cost_order')
+                )
 
     for order in orders_with_cost:
-        need_order = Order.objects.get(id=order['order'])
-        need_order.cost = order['cost_order']
-        need_order.save()
+        required_order = Order.objects.get(id=order.order)
+        required_order.cost = order.cost_order
+        required_order.save()
 
 def move_backward(apps, schema_editor):
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
     Order = apps.get_model('foodcartapp', 'Order')
-    all_fields = OrderQuantity.objects.all()
-    all_fields = (
-            all_fields.annotate(cost_position=F('quantity') * F('product__price')).all()
+    required_fields = OrderQuantity.objects.all()
+    required_fields = (
+            required_fields.annotate(cost_position=F('quantity') * F('product__price')).all()
         )
-    orders_with_cost = all_fields.values('order').annotate(
+    orders_with_cost = required_fields.annotate(
                 cost_order=Sum('cost_position')
-                ).values('order',
-                         'cost_order')
+                )
 
     for order in orders_with_cost:
-        need_order = Order.objects.get(id=order['order'])
-        need_order.cost = order['cost_order']
-        need_order.save()
+        required_order = Order.objects.get(id=order.order)
+        required_order.cost = order.cost_order
+        required_order.save()
 
 class Migration(migrations.Migration):
 
