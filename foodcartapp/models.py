@@ -173,7 +173,8 @@ class Order(models.Model):
                                   max_length=100,)
     last_name = models.CharField(verbose_name='фамилия',
                                  max_length=100,)
-    address = models.TextField(verbose_name='адрес',)
+    address = models.CharField(verbose_name='адрес',
+                               max_length=200,)
     phonenumber = PhoneNumberField(verbose_name='телефон',
                                    region="RU")
 
