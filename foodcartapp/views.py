@@ -97,13 +97,13 @@ def register_order(request):
                                             address=serializer.validated_data['address'],
                                             phonenumber=serializer.validated_data['phonenumber'],)
 
-        for order_position in serializer.validated_data['products']:
-            position = Product.objects.get(name=order_position['product'])
-            if position is not None:
+        order_positions = Product.objects.filter(name__in=serializer.validated_data['products'])
+        if order_positions:
+            for order_position in order_positions:
                 OrderQuantity.objects.create(order=create_order,
                                              product=position,
                                              quantity=order_position['quantity'])
         order = serializer.data
         order['id'] = create_order.id
-        return Response(order)                             
+        return Response(order)
     return Response(serializer.validated_data)
