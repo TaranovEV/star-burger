@@ -177,9 +177,7 @@ class Order(models.Model):
     phonenumber = PhoneNumberField(verbose_name='телефон',
                                    region="RU")
 
-    registered_at = models.DateTimeField(auto_now_add=True,
-                                         blank=True,
-                                         null=True)
+    registered_at = models.DateTimeField(auto_now_add=True,)
     called_at = models.DateTimeField(blank=True, null=True)
     delivered_at = models.DateTimeField(blank=True, null=True)
 
