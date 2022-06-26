@@ -92,15 +92,6 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid(raise_exception=True):
-        sum_cost_order = 0
-        for_calculate_cost = serializer.validated_data['products']
-        for order_position in for_calculate_cost:
-            order_position['cost'] = (
-                Product.objects.get(name=order_position['product']).price
-                * order_position['quantity']
-            )
-            sum_cost_order += order_position['cost']
-
         create_order = Order.objects.create(first_name=serializer.validated_data['first_name'],
                                             last_name=serializer.validated_data['last_name'],
                                             address=serializer.validated_data['address'],
