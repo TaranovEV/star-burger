@@ -7,22 +7,22 @@ def copy_price(apps, schema_editor):
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
     replace_objects = OrderQuantity.objects.all()
     if replace_objects.exists():
-    for position in replace_objects.iterator():
-        for product in position.order.products.all():
-            price = Product.objects.get(id=product.id).price
-            position.price = price
-            position.save()
+        for position in replace_objects.iterator():
+            for product in position.order.products.all():
+                price = Product.objects.get(id=product.id).price
+                position.price = price
+                position.save()
 
 def move_backward(apps, schema_editor):
     Product = apps.get_model('foodcartapp', 'Product')
     OrderQuantity = apps.get_model('foodcartapp', 'OrderQuantity')
     replace_objects = OrderQuantity.objects.all()
     if replace_objects.exists():
-    for position in replace_objects.iterator():
-        for product in position.order.products.all():
-            price = Product.objects.get(id=product.id).price
-            position.price = price
-            position.save()
+        for position in replace_objects.iterator():
+            for product in position.order.products.all():
+                price = Product.objects.get(id=product.id).price
+                position.price = price
+                position.save()
 
 class Migration(migrations.Migration):
 
