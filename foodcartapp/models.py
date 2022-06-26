@@ -200,7 +200,7 @@ class OrderQuantity(models.Model):
                               related_name='in_order_quantity',
                               on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(verbose_name='количество',
-                                                validators=[MinValueValidator(0)])
+                                                validators=[MinValueValidator(1)])
     cost = models.DecimalField('стоимость',
                                max_digits=8,
                                decimal_places=2,
