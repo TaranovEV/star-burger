@@ -6,13 +6,13 @@ from django.db.models import Sum, F
 
 class OrderQuantityQuerySet(models.QuerySet):
     def cost_order(self):
-        all_fields = self.prefetch_related('order', 'product')
-        all_fields = (
-            all_fields.annotate(
+        required_fields = self.prefetch_related('order', 'product')
+        required_fields = (
+            required_fields.annotate(
                 cost_position=F('quantity') * F('cost')).all()
         )
         return (
-            all_fields.values('order').annotate(
+            required_fields.values('order').annotate(
                 cost_order=Sum('cost_position')
                 ).values('order',
                          'order__address',
